@@ -2,10 +2,14 @@
 
 int main(int argc, char *argv[])
 {
-	char buf[128];
 	int key = 0;
-	win_init("testf.c");
 
+	if(argc != 2)
+	{
+		printf("Error: invalid parameters\n");
+		exit(ERR_OPEN);
+	}
+	win_init(argv[1]);
 	while((key = getch()) != 27)
 	{
 		switch(key)
@@ -25,15 +29,21 @@ int main(int argc, char *argv[])
 			case KEY_F(2):
 				write_content(patch, content);
 			break;
+			case KEY_RESIZE:
+				;
+			break;
 			case KEY_BACKSPACE:
 				action_backspace();
+			break;
+			case '\n':
+				action_insert(key);
+				action_mvdown();
 			break;
 			default:
 				action_insert((char)key);
 			break;
 		}
 	}
-
 	win_destroy();
 	return 0;
 }

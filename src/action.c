@@ -8,7 +8,7 @@ void action_mvright()
 		return;
 
 	if(content[cindex] == '\t')
-		ccol += 8;
+		ccol += 8/*8 - ccol % 8*/;
 	else
 		ccol++;
 
@@ -27,7 +27,7 @@ void action_mvleft()
 
 	cindex--;
 		if(content[cindex] == '\t')
-			ccol -= 8;
+			ccol -= 8/*(ccol - 1) % 8 + 1*/;
 		else 
 			ccol--;
 
@@ -39,7 +39,12 @@ void action_mvleft()
 //Перемещает курсов вверх
 void action_mvup()
 {
-	;
+	/*if(cline > 0 )
+		cline--;
+	ccol = 0;
+
+
+	winref_content(WIN_C);*/
 }
 
 //Перемещает курсор вниз
@@ -79,24 +84,22 @@ int get_nextup(int start)
 
 void action_insert(char ch)
 {
-	char ms[100];
-	cont_len++;
 	char *buffer = NULL;
+
+	//Выделяем память на 1 элемент больше
+	cont_len++;
 	buffer = malloc(sizeof(char) * cont_len);
-
-	/*sprintf(ms, "OLD:%p, NEW:%p, CINDEX:%d, LEN:%d", content, buffer, cindex, cont_len);
-	mvprintw(LINES - 1, 15, ms);
-	refresh();
-	getch();*/
-
+	//Вставляем символ
 	strncpy( buffer, content, cindex);
 	buffer[cindex] = ch;
 	for(int i = cindex; i < cont_len - 1; i++ )
 		buffer[i + 1] = content[i];
 
+	//Освобождаем память из под старых данных
 	free(content);
 	content = buffer;
-	winref_content(WIN_C);
+
+	//Смещаем курсор
 	if(ccol < COLS - 4)
 		action_mvright();
 	else
@@ -106,15 +109,17 @@ void action_insert(char ch)
 void action_backspace()
 {
 	cont_len--;
-
+	//Если курсов в сама начале и стирать нечего
 	if(cindex == 0)
 		return;
 
+	//Смещаем курсор
 	if(ccol > 0)
 		action_mvleft();
 	else
 		action_mvup();
 
+	//Копируем со смещением на 1 символ(чтобы его удалить)
 	for(int i = cindex; i < cont_len ; i++)
 		content[i] = content[i + 1];
 

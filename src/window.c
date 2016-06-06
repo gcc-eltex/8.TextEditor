@@ -9,7 +9,15 @@ void win_init(char *fpatch)
 	pindex = 0;
 	cindex = 0;
 	strcpy(patch, fpatch);
-	read_content(patch, &content);
+	cont_len = read_content(patch, &content);
+
+	//Если файл не удалось открыть
+	if(cont_len == ERR_OPEN)
+	{
+		content = malloc(sizeof(char) * 64);
+		strcpy(content, "This is a new text file!");
+		cont_len = strlen(content) + 1;
+	}
 
 	//Инициализация ncurses
 	initscr();						//ncurses mode
@@ -41,6 +49,10 @@ void win_resize()
 	COLS = size.ws_col;
 	LINES = size.ws_row;
 	
+	ccol = 0;
+	cline = 0;
+	pindex = 0;
+	cindex = 0;
 	//Изменяем размеры окон
 	resizeterm(LINES, COLS);
 	wresize(win[WIN_BC], LINES - 2, COLS);

@@ -13,4 +13,4 @@ $(OBJ):
 clear:
 	rm -rf *.o
 run:
-	./main
+	./main  test_file.c

@@ -15,11 +15,11 @@ int read_content(char *fpath, char **cont)
 	fsize = ftell(fd);
 	fseek(fd, 0, SEEK_SET);
 
-	cont_len = fsize;
-	*cont = malloc(sizeof(char) * fsize);
+	*cont = malloc(sizeof(char) * fsize + 1);
 	fread(*cont, sizeof(char), fsize, fd);
 	fclose(fd);
-	return 0;
+	(*cont)[fsize] = '\0';
+	return fsize + 1;
 }
 
 int write_content(char *fpath, char *cont)

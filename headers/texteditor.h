@@ -32,7 +32,7 @@ void winref_content(unsigned index);	//Перерисовка контента
 
 //fsystem.c
 int read_content(char *fpath, char **cont);		//Считывает все содержимое в cont из файла fpath
-int write_content(char *fpath, char *cont);	//Записывает содержимое cont в файл fpath
+int write_content(char *fpath, char *cont);		//Записывает содержимое cont в файл fpath
 
 //action.c
 void action_mvright();					//Перемещает курсор вправо
